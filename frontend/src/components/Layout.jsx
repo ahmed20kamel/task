@@ -2,12 +2,15 @@ import React, { useState, useEffect } from 'react';
 import { Box, AppBar, Toolbar, Typography, Button, IconButton, Badge } from '@mui/material';
 import { Notifications, Logout, Dashboard } from '@mui/icons-material';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 import NotificationPanel from './NotificationPanel';
+import LanguageSwitcher from './LanguageSwitcher';
 import api from '../services/api';
 
 const Layout = ({ children }) => {
   const { user, logout } = useAuth();
+  const { t } = useTranslation();
   const navigate = useNavigate();
   const [notificationOpen, setNotificationOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -38,10 +41,10 @@ const Layout = ({ children }) => {
         <Toolbar>
           <Dashboard sx={{ mr: 2 }} />
           <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-            تطبيق إدارة المهام
+            {t('app.title')}
           </Typography>
           <Typography variant="body2" sx={{ mr: 2 }}>
-            {user?.first_name} {user?.last_name} ({user?.role === 'admin' ? 'مدير' : 'موظف'})
+            {user?.first_name} {user?.last_name} ({user?.role === 'admin' ? t('auth.admin') : t('auth.employee')})
           </Typography>
           <IconButton
             color="inherit"
@@ -52,8 +55,9 @@ const Layout = ({ children }) => {
               <Notifications />
             </Badge>
           </IconButton>
+          <LanguageSwitcher />
           <Button color="inherit" onClick={handleLogout} startIcon={<Logout />}>
-            تسجيل الخروج
+            {t('auth.logout')}
           </Button>
         </Toolbar>
       </AppBar>

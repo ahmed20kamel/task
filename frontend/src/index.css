@@ -4,18 +4,38 @@
   box-sizing: border-box;
 }
 
+html {
+  direction: rtl; /* Default to RTL */
+}
+
 body {
   margin: 0;
-  font-family: 'Segoe UI', 'Roboto', 'Oxygen',
+  font-family: 'Segoe UI', 'Tahoma', 'Roboto', 'Oxygen',
     'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  direction: rtl;
+  direction: rtl; /* Default to RTL */
+}
+
+body[dir="ltr"] {
+  font-family: 'Segoe UI', 'Roboto', 'Helvetica', 'Arial', sans-serif;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+/* RTL specific styles */
+[dir="rtl"] {
+  direction: rtl;
+  text-align: right;
+}
+
+/* LTR specific styles */
+[dir="ltr"] {
+  direction: ltr;
+  text-align: left;
 }
 

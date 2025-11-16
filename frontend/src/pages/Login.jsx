@@ -10,9 +10,11 @@ import {
   Alert,
   CircularProgress,
 } from '@mui/material';
+import { useTranslation } from 'react-i18next';
 import { useAuth } from '../context/AuthContext';
 
 const Login = () => {
+  const { t } = useTranslation();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
@@ -30,7 +32,7 @@ const Login = () => {
       const user = result.user || JSON.parse(localStorage.getItem('user') || '{}');
       navigate(user.role === 'admin' ? '/admin' : '/dashboard');
     } catch (err) {
-      setError(err.response?.data?.error || 'حدث خطأ أثناء تسجيل الدخول');
+      setError(err.response?.data?.error || t('auth.loginError'));
     } finally {
       setLoading(false);
     }
@@ -40,7 +42,7 @@ const Login = () => {
     <Container maxWidth="sm" sx={{ mt: 8 }}>
       <Paper elevation={3} sx={{ p: 4 }}>
         <Typography variant="h4" component="h1" gutterBottom align="center">
-          تسجيل الدخول
+          {t('auth.login')}
         </Typography>
         
         {error && (
@@ -52,7 +54,7 @@ const Login = () => {
         <Box component="form" onSubmit={handleSubmit} sx={{ mt: 3 }}>
           <TextField
             fullWidth
-            label="اسم المستخدم"
+            label={t('auth.username')}
             value={username}
             onChange={(e) => setUsername(e.target.value)}
             margin="normal"
@@ -61,7 +63,7 @@ const Login = () => {
           />
           <TextField
             fullWidth
-            label="كلمة المرور"
+            label={t('auth.password')}
             type="password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
@@ -75,12 +77,12 @@ const Login = () => {
             sx={{ mt: 3, mb: 2 }}
             disabled={loading}
           >
-            {loading ? <CircularProgress size={24} /> : 'تسجيل الدخول'}
+            {loading ? <CircularProgress size={24} /> : t('auth.login')}
           </Button>
           <Box textAlign="center">
             <Link to="/register" style={{ textDecoration: 'none' }}>
               <Typography variant="body2" color="primary">
-                ليس لديك حساب؟ سجل الآن
+                {t('auth.noAccount')}
               </Typography>
             </Link>
           </Box>
