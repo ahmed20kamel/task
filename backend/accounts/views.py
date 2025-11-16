@@ -7,13 +7,9 @@ from .serializers import UserSerializer, UserRegistrationSerializer, LoginSerial
 from accounts.models import User
 
 
-@api_view(['GET', 'POST', 'OPTIONS'])
+@api_view(['POST'])
 @permission_classes([AllowAny])
 def register(request):
-
-    if request.method != 'POST':
-        return Response({"detail": "OK"}, status=200)
-
     serializer = UserRegistrationSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()
@@ -22,17 +18,12 @@ def register(request):
             'token': token.key,
             'user': UserSerializer(user).data
         }, status=status.HTTP_201_CREATED)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    return Response(serializer.errors, status=400)
 
-
-@api_view(['GET', 'POST', 'OPTIONS'])
+@api_view(['POST'])
 @permission_classes([AllowAny])
 def login(request):
-
-    if request.method != 'POST':
-        return Response({"detail": "OK"}, status=200)
-
     serializer = LoginSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.validated_data['user']
@@ -41,8 +32,7 @@ def login(request):
             'token': token.key,
             'user': UserSerializer(user).data
         })
-
-    return Response(serializer.errors, status=400)
+    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
 @api_view(['POST'])
@@ -83,3 +73,4 @@ def employee_list(request):
     employees = User.objects.filter(role='employee')
     serializer = UserSerializer(employees, many=True)
     return Response(serializer.data)
+
