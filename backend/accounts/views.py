@@ -7,13 +7,12 @@ from .serializers import UserSerializer, UserRegistrationSerializer, LoginSerial
 from accounts.models import User
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'OPTIONS'])
 @permission_classes([AllowAny])
 def register(request):
 
-    # Preflight GET request for browsers (important for Render)
-    if request.method == 'GET':
-        return Response({"detail": "Register endpoint OK"}, status=200)
+    if request.method != 'POST':
+        return Response({"detail": "OK"}, status=200)
 
     serializer = UserRegistrationSerializer(data=request.data)
     if serializer.is_valid():
@@ -23,16 +22,16 @@ def register(request):
             'token': token.key,
             'user': UserSerializer(user).data
         }, status=status.HTTP_201_CREATED)
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response(serializer.errors, status=400)
 
 
-@api_view(['GET', 'POST'])
+@api_view(['GET', 'POST', 'OPTIONS'])
 @permission_classes([AllowAny])
 def login(request):
 
-    # Preflight GET request for browsers (important for Render)
-    if request.method == 'GET':
-        return Response({"detail": "Login endpoint OK"}, status=200)
+    if request.method != 'POST':
+        return Response({"detail": "OK"}, status=200)
 
     serializer = LoginSerializer(data=request.data)
     if serializer.is_valid():
@@ -42,7 +41,8 @@ def login(request):
             'token': token.key,
             'user': UserSerializer(user).data
         })
-    return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    return Response(serializer.errors, status=400)
 
 
 @api_view(['POST'])
@@ -83,4 +83,3 @@ def employee_list(request):
     employees = User.objects.filter(role='employee')
     serializer = UserSerializer(employees, many=True)
     return Response(serializer.data)
-
