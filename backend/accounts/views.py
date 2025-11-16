@@ -7,9 +7,14 @@ from .serializers import UserSerializer, UserRegistrationSerializer, LoginSerial
 from accounts.models import User
 
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def register(request):
+
+    # Preflight GET request for browsers (important for Render)
+    if request.method == 'GET':
+        return Response({"detail": "Register endpoint OK"}, status=200)
+
     serializer = UserRegistrationSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.save()
@@ -21,9 +26,14 @@ def register(request):
     return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(['POST'])
+@api_view(['GET', 'POST'])
 @permission_classes([AllowAny])
 def login(request):
+
+    # Preflight GET request for browsers (important for Render)
+    if request.method == 'GET':
+        return Response({"detail": "Login endpoint OK"}, status=200)
+
     serializer = LoginSerializer(data=request.data)
     if serializer.is_valid():
         user = serializer.validated_data['user']
